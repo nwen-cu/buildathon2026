@@ -29,6 +29,15 @@
 - Verdict: promote compact dumps; kill further large config dumps. Python 3.13.18 + Debian 13 + 1 CPU cgroup confirmed.
 - Intel: Runtime section filled. `/arena/complete` is a new unknown.
 
-### S3 py-starter
+### S3 py-starter — BB-00F46ED6
+
+- Hypothesis: remote kit example scores ~1.15 like the published baseline.
+- Probe: `py-starter` / `7a8e6b54ef3defe133a1706ac8214b43abcdc007`
+- Allowed: built, check passed, scored. Wait 84 ms.
+- Score: **1.15** (exactly baseline). Entered in the final as current best. Board rank ~158.
+- Verdict: promote as control. Result UI is a single mean, no per-match places.
+- Intel: scorer matches the published starter score; our packaging is correct.
+
+### S4 aim-nearest-visible
 
 _(pending)_
