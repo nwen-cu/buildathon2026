@@ -20,6 +20,15 @@
 - Verdict: isolate — stderr is a short **tail**. We got the end of `hello.config.upgrades` only. Platform dump was dropped. Config tail matches kit recording.
 - Intel: scorer hello.config ≈ kit; truncation ~last few KB; S2 must be a tiny runtime dump.
 
-### S2 dump-runtime
+### S2 dump-runtime — BB-919F0E8A
+
+- Hypothesis: a ~2 KiB runtime dump survives the stderr tail.
+- Probe: `dump-runtime` / `de154e34f13ae9c81964d588fb16875f80966039`
+- Allowed: built; check FAIL as designed. Whole JSON + ruler returned.
+- Score: n/a
+- Verdict: promote compact dumps; kill further large config dumps. Python 3.13.18 + Debian 13 + 1 CPU cgroup confirmed.
+- Intel: Runtime section filled. `/arena/complete` is a new unknown.
+
+### S3 py-starter
 
 _(pending)_

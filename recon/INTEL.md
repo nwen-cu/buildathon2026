@@ -4,10 +4,12 @@ Living brief for the combat bot. Scorer facts land after Hour 1 slot 1.
 
 ## Runtime
 
-- Kit / local: Python 3.13, stdlib only, `python:3.13-slim` image.
-- Scorer image: pending dump-platform (S1).
-- Timing headroom: unknown until sleep probes. Protocol budget 50 ms, hello 20 s.
-- Hard no's: none yet.
+- Image: `python:3.13-slim` is legal. Scorer Python **3.13.18** (GCC 14.2.0) at `/usr/local/bin/python3`.
+- OS: Debian GNU/Linux 13 (trixie) container on **GCP Ubuntu 24.04** kernel `7.0.0-1017-gcp`, x86_64, hostname `0aa17f502e6a`.
+- uid/gid **65534**. cgroup `cpu.max` = `100000 100000` (1 CPU). cgroup `memory.max` = 536870912 (512 MB).
+- `os.cpu_count()` reports **32** and `/proc/meminfo` shows the **host** (~126 GB). Do not size thread pools from nproc/meminfo; obey cgroup.
+- Import json/math ~0.004 ms. Timing headroom for AI still unknown (sleep probes).
+- Hard no's: none yet. Stdlib-only Python is allowed.
 
 ## Scorer facts
 
@@ -15,7 +17,9 @@ Living brief for the combat bot. Scorer facts land after Hour 1 slot 1.
 - Scorer `hello.config.upgrades` matches the kit recording (mortar/laser/lightning upgrade ids and muls). Treat kit config as live until proven otherwise.
 - Local `check.py` hello.protocol `mechfight/1`, slot 3 in the recording.
 - Map files: `v2/world.json`, `v2/terrain.i16`.
-- Runtime OS/cgroup/python: pending compact S2 dump-runtime.
+- S2 BB-919F0E8A compact dump **fit entirely** in the stderr tail (ruler A000–A031 present). Keep dumps under a couple of KB.
+- `/bot` is the repo copy. `/tmp` empty at hello. `/arena` has **`complete` and `v2`** (kit only ships `v2`). `hello.map.files` still `v2/world.json`, `v2/terrain.i16`.
+- hello.slot in check recording is 3; protocol `mechfight/1`.
 - Recorded `hello.config` (kit stream; treat as live unless S1 differs):
 
 Match: tick_hz 20, decide_every 2, duration_s 480, 16 mechs.
@@ -60,9 +64,7 @@ None promoted. Control after S2/S3: kit `py-starter` until a play probe beats it
 
 ## Open questions
 
-- Scorer OS / cgroup / `/arena` listing / Python in container (S1)
-- stderr truncation length (S1)
-- Whether scorer `hello.config` matches kit recording (S1)
+- What is `/arena/complete` vs `v2`?
 - Remote `py-starter` score vs baseline 1.15
 - `aim-nearest-visible` vs starter
-- 50 ms cliff, house-bot hunt, roofs, loot
+- 50 ms cliff, house-bot hunt, roofs, loot, nproc-vs-cgroup thread safety
