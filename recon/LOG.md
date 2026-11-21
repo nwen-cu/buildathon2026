@@ -118,19 +118,28 @@ Quota opens 3:05 AM EST. Control: lead-gun 2.54.
 
 - Hypothesis: strafe-away + snap gun beats commit-chase (lead 2.54); boost only inside 40 m.
 - Probe: `kite` / `cb7c0142c5309a8af44ec82390343977bf18d05f`
-- Allowed: received BB-E868C826 Sat 3:08 AM; **Scoring**. Wait 147 ms. Next quota 3:10 AM. Do not submit until scored.
-- Score: _(pending)_
-- Verdict: _(pending)_
-- Intel: Combat — kite vs commit
+- Allowed: built, check passed, scored. BB-E868C826 Sat 3:08 AM. Wait 147 ms.
+- Score: **0.56** (vs lead 2.54)
+- Verdict: **kill kite.** Strafe-away is worse than hide-prism 1.04 and far worse than commit. House bots punish backing off. Keep committing.
+- Intel: Combat — commit, do not kite.
 
 ### S11 boost-center
 
 - Hypothesis: always-boost to zone (sound 90) while still shooting when visible changes placement vs lead-walk 2.54.
-- Probe: `boost-center` / _(SHA at submit)_
-- Allowed: _(armed; submit after kite scores and 3:10 AM slot)_
+- Probe: `boost-center` / `359f6a57c660bd17a422a02746db12a9f579dc94`
+- Allowed: received BB-8A4EA604 Sat 3:12 AM; **Scoring**. Wait 275 ms. Next quota 3:26 AM. Do not submit until scored.
 - Score: _(pending)_
 - Verdict: _(pending)_
 - Intel: Movement / hunt noise
+
+### S12 rust path-zone
+
+- Hypothesis: compiled 4 m A* to zone when nobody is visible, else snap chase, scores vs snap 2.42 (Rust legal).
+- Probe: `path-zone` (Rust image) / _(SHA at submit)_
+- Allowed: _(armed; submit after boost-center scores and 3:26 AM slot)_
+- Score: _(pending)_
+- Verdict: _(pending)_
+- Intel: Algorithms — remote 4 m A*
 
 ## Local — Rust path-zone / hide-prism
 

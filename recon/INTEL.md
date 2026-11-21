@@ -59,6 +59,7 @@ Aim-nv walks full speed toward the target (or zone) with **no boost** and still 
 
 - **Promoted:** chase nearest visible `kind==mech`, **gun-speed lead** (252 m/s), fire gun only (`fire[True, False]`). Score **2.54** (BB-BD3210F4).
 - **Killed:** hide-prism (A* cover + boost on damaged, no fire) scored **1.04**. Keep shooting. Idle 0.02 was motionless, not "not behind a wall."
+- **Killed:** kite (strafe-away, boost <40 m) scored **0.56**. Do not back off.
 - Snap-aim same chase is **2.42**. Lead is worth +0.12; keep it.
 - Kit starter (loot + jump + boost-out-of-zone + fire both) is **1.15**. Do not inherit loot/jump as the combat core.
 - Special weapons unmeasured.
@@ -86,7 +87,7 @@ Local cover_step on the Oval (400 random open cells, threat 80 m): ring 10 (40 m
 - House-bot TTK on idle: **answered** — 0.02, hunt is immediate
 - Lead vs snap: **answered** — lead **2.54** beats snap **2.42** (BB-BD3210F4). Use lead.
 - Remote 50 ms cliff: **answered** — `sleep-35` scores **2.42** (BB-8CE1E77C), same as snap aim-nv. 35 ms work is legal; scoring ran slow (~15 min) because lockstep waits. Keep combat under 35 ms. Do not probe sleep-45.
-- Kite vs commit (Hour 3 slot 2 in flight)
+- Kite vs commit: **killed** — **0.56** (BB-E868C826). Strafe-away is worse than hide 1.04. Commit.
 - hide-prism on damaged: **killed** — **1.04** (BB-F541F895). Stopping fire to cover is worse than lead 2.54. Do not spend slots on ring size / silent cover yet.
 - Remote 4 m A* in a match: local PASS (Python hide-prism / path-zone; Rust hide-prism / path-zone). Hour 3 slot 4 is Rust `path-zone`.
 - Boost noise / silent-walk / roofs
