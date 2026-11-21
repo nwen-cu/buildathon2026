@@ -55,6 +55,7 @@
 - Recorded check stream (300 obs): visible mech **56%** of ticks, range p50 140 m / p90 150 m. Horizontal lead at gun 252 m/s: p50 4.4 m, p90 7.6 m. Stream events: 13 damaged, 10 hit. Sounds include gun (62), laser, explosion, crate, death, boost.
 - `hello.config.mech` key is `walk_speed` (11.7), not `walk`. `world.json` 300 KB / 3.4 ms load.
 - Rust `mechbot` (serde_json, rust:1.85-bookworm → debian slim) 1-CPU Docker: aim-nv/idle/lead-gun PASS. ready ~200–230 ms. tick p50 **0.9 ms** (same floor as Python idle in Docker). Hello `world.json` **map_loaded=true load_ms≈5–6 prisms=259**. Compile after deps ~2.5 s locally; first scorer build pays the rust image pull (fits 10 min).
+- 1-CPU Docker grid/A* (Python, `/arena/v2/world.json`): 156 ground-blocking prisms. 4 m A* max **2.8 ms** (legal). 2 m A* max **25 ms** (tight). `break-los` host check PASS p50 0.1 ms. `path-zone` 1-CPU Docker PASS ready 501 ms, tick p50 1.0 max 1.8.
 
 ## Hour 2
 
@@ -63,8 +64,17 @@ Quota opens 2:04 AM EST. Control: aim-nv 2.42.
 ### S5 idle
 
 - Hypothesis: a motionless mech is hunted quickly (weakest-first), so idle scores near the floor and gives TTK/hunt intel.
-- Probe: `idle` / _(SHA at submit)_
-- Allowed: _(pending)_
+- Probe: `idle` / `01526ab20ebc80ac464f3ed684adb8af0c568dcf`
+- Allowed: built (receipt **BB-1B56E18D**, Scoring/Fetching Sat 2:05 AM, wait 166 ms)
 - Score: _(pending)_
 - Verdict: _(pending)_
 - Intel: House bots
+
+### S6 lead-gun
+
+- Hypothesis: same chase as aim-nv 2.42, aim at gun-speed lead instead of snap; recorded vis range p50 140 m implies ~4.4 m lead.
+- Probe: `lead-gun` / _(SHA at submit)_
+- Allowed: _(pending)_
+- Score: _(pending)_
+- Verdict: _(pending)_
+- Intel: Combat

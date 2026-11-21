@@ -1,4 +1,5 @@
 """Hour-1 recon probe: mode from PROBE file (one line)."""
+import heapq
 import json
 import math
 import os
@@ -687,6 +688,192 @@ class ZoneHugBot:
         return act
 
 
+def _world_json_path(hello: mf.Hello) -> str | None:
+    mp = hello.get("map") or {}
+    d = mp.get("dir")
+    cands = []
+    if d:
+        cands.append(os.path.join(str(d), "v2", "world.json"))
+        cands.append(os.path.join(str(d), "world.json"))
+    cands.extend(
+        (
+            "/arena/v2/world.json",
+            "mechfight-kit/arena/v2/world.json",
+        )
+    )
+    for c in cands:
+        if os.path.isfile(c):
+            return c
+    return None
+
+
+def _pip(x: float, y: float, ring: list) -> bool:
+    n = len(ring) // 2
+    inside = False
+    j = n - 1
+    for i in range(n):
+        xi, yi = float(ring[2 * i]), float(ring[2 * i + 1])
+        xj, yj = float(ring[2 * j]), float(ring[2 * j + 1])
+        dy = (yj - yi) or 1e-12
+        if ((yi > y) != (yj > y)) and (x < (xj - xi) * (y - yi) / dy + xi):
+            inside = not inside
+        j = i
+    return inside
+
+
+class OccupancyGrid:
+    def __init__(self, world: dict, step: float = 4.0) -> None:
+        b = world["bounds"]
+        self.minx = float(b["minX"])
+        self.miny = float(b["minY"])
+        self.step = step
+        self.nx = int(math.ceil((float(b["maxX"]) - self.minx) / step)) + 1
+        self.ny = int(math.ceil((float(b["maxY"]) - self.miny) / step)) + 1
+        self.grid = bytearray(self.nx * self.ny)
+        for pr in world.get("prisms") or []:
+            base = float(pr.get("base") or 0)
+            top = float(pr.get("top") or 0)
+            if base >= 2.5 or top <= 1.2:
+                continue
+            ring = pr.get("ring") or []
+            if len(ring) < 6:
+                continue
+            xs = ring[0::2]
+            ys = ring[1::2]
+            i0 = max(0, int((min(xs) - self.minx) / step) - 1)
+            i1 = min(self.nx - 1, int((max(xs) - self.minx) / step) + 1)
+            j0 = max(0, int((min(ys) - self.miny) / step) - 1)
+            j1 = min(self.ny - 1, int((max(ys) - self.miny) / step) + 1)
+            holes = pr.get("holes") or []
+            for j in range(j0, j1 + 1):
+                y = self.miny + (j + 0.5) * step
+                row = j * self.nx
+                for i in range(i0, i1 + 1):
+                    x = self.minx + (i + 0.5) * step
+                    if _pip(x, y, ring) and not any(_pip(x, y, h) for h in holes):
+                        self.grid[row + i] = 1
+
+    def _ij(self, x: float, y: float) -> tuple[int, int]:
+        i = max(0, min(self.nx - 1, int((x - self.minx) / self.step)))
+        j = max(0, min(self.ny - 1, int((y - self.miny) / self.step)))
+        return i, j
+
+    def step_toward(self, src, dst) -> list[float] | None:
+        si, sj = self._ij(src[0], src[1])
+        gi, gj = self._ij(dst[0], dst[1])
+        nx, ny, grid = self.nx, self.ny, self.grid
+        if grid[sj * nx + si] or grid[gj * nx + gi]:
+            return None
+        h = lambda i, j: abs(i - gi) + abs(j - gj)
+        openh = [(h(si, sj), 0.0, si, sj)]
+        gbest = {sj * nx + si: 0.0}
+        came: dict[int, int] = {}
+        found = False
+        popped = 0
+        while openh and popped < 8000:
+            _, g, i, j = heapq.heappop(openh)
+            popped += 1
+            if i == gi and j == gj:
+                found = True
+                break
+            if g > gbest.get(j * nx + i, 1e18):
+                continue
+            for di, dj in ((1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (1, -1), (-1, 1), (-1, -1)):
+                ni, nj = i + di, j + dj
+                if ni < 0 or nj < 0 or ni >= nx or nj >= ny:
+                    continue
+                nidx = nj * nx + ni
+                if grid[nidx]:
+                    continue
+                ng = g + (1.414 if di and dj else 1.0)
+                if ng < gbest.get(nidx, 1e18):
+                    gbest[nidx] = ng
+                    came[nidx] = j * nx + i
+                    heapq.heappush(openh, (ng + h(ni, nj), ng, ni, nj))
+        if not found:
+            return None
+        path = [gj * nx + gi]
+        cur = path[0]
+        while cur in came:
+            cur = came[cur]
+            path.append(cur)
+        path.reverse()
+        look = path[min(4, len(path) - 1)]
+        ti, tj = look % nx, look // nx
+        tx = self.minx + (ti + 0.5) * self.step
+        ty = self.miny + (tj + 0.5) * self.step
+        return _toward((src[0], src[1]), (tx, ty))
+
+
+class PathZoneBot:
+    name = "h3-path-zone"
+
+    def __init__(self, hello: mf.Hello) -> None:
+        self.grid = None
+        path = _world_json_path(hello)
+        if path:
+            try:
+                with open(path, encoding="utf-8") as f:
+                    self.grid = OccupancyGrid(json.load(f), 4.0)
+            except (OSError, json.JSONDecodeError, KeyError, TypeError, ValueError):
+                self.grid = None
+
+    def act(self, obs: mf.Observation) -> mf.Action:
+        me = obs["self"]
+        act: mf.Action = {"tick": obs["tick"]}
+        target = _nearest_mech(obs, me)
+        if target is not None:
+            yaw, pitch = _aim_at(me["pos"], target["pos"])
+            act.update(move=[math.cos(yaw), math.sin(yaw)], aim=[yaw, pitch], fire=[True, False])
+            return act
+        goal = _zone_goal(obs)
+        if self.grid is not None and goal is not None:
+            step = self.grid.step_toward(me["pos"], goal)
+            if step is not None:
+                act.update(move=step, aim=[math.atan2(step[1], step[0]), 0.0])
+                return act
+        _walk_zone(act, me, obs, boost=False)
+        return act
+
+
+class BreakLosBot:
+    name = "h3-break-los"
+
+    def __init__(self, hello: mf.Hello) -> None:
+        self.last_bearing: float | None = None
+        self.hurt_until = -1.0
+
+    def act(self, obs: mf.Observation) -> mf.Action:
+        me = obs["self"]
+        act: mf.Action = {"tick": obs["tick"]}
+        t = float(obs.get("t") or 0.0)
+        for ev in obs.get("events") or []:
+            if ev.get("type") == "damaged" and ev.get("bearing") is not None:
+                self.last_bearing = float(ev["bearing"])
+                self.hurt_until = t + 4.0
+        fleeing = t < self.hurt_until and self.last_bearing is not None
+        if fleeing:
+            away = self.last_bearing + math.pi
+            act.update(
+                move=[math.cos(away), math.sin(away)],
+                aim=[self.last_bearing, 0.0],
+                boost=True,
+                fire=[False, False],
+            )
+            return act
+        target = _nearest_mech(obs, me)
+        if target is not None:
+            yaw, pitch = _aim_at(me["pos"], target["pos"])
+            act.update(
+                move=[math.cos(yaw), math.sin(yaw)],
+                aim=[yaw, pitch],
+                fire=[True, False],
+            )
+        else:
+            _walk_zone(act, me, obs, boost=False)
+        return act
+
+
 def _sleep_wrapper(inner_cls, ms: int):
     class SleepBot:
         name = f"sleep-{ms}"[:32]
@@ -724,6 +911,8 @@ _MODES = {
     "crate-crash": CrateCrashBot,
     "jump-jet-roof": JumpJetRoofBot,
     "zone-hug": ZoneHugBot,
+    "break-los": BreakLosBot,
+    "path-zone": PathZoneBot,
     "sleep-20": _sleep_wrapper(_CONTROL, 20),
     "sleep-35": _sleep_wrapper(_CONTROL, 35),
     "sleep-45": _sleep_wrapper(_CONTROL, 45),

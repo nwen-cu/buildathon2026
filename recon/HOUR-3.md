@@ -1,0 +1,16 @@
+# Hour 3 — draft (confirm after Hour 2 meeting)
+
+Do not execute this order if Hour 2 disagrees.
+
+Steering inputs expected from Hour 2: idle TTK, lead vs 2.42, sleep-35 late%/score, rust-aim-nv vs 2.42.
+
+Candidates (pick exactly 4 at the meeting):
+
+1. `kite` — deferred from Hour 2; commit vs strafe if rust/lead did not already reshape combat.
+2. `break-los` — local check PASS. Use if idle dies fast (house bots hunt sitting targets).
+3. `walk-center` or `boost-center` — isolate boost noise if idle TTK is short (sound range boost 90 vs step 40).
+4. `take-laser` or `silent-walk` — only if pathing/hunt is not the blocker.
+5. If Rust ≈ 2.42: next compiled multiplex is **Rust 4 m A\* + aim-nv** (pathing + combat), not a third language.
+6. Python `path-zone` — 4 m A\* to zone when nobody is visible, else aim-nv. 1-CPU Docker PASS (ready 501 ms, tick p50 1.0 max 1.8). Kill if score ≤ walk-to-zone.
+
+Local already: 4 m A\* max 2.8 ms on 1 CPU — legal. 2 m A\* max 25 ms — Rust-only until proven. `break-los` and `path-zone` are implemented; do not submit them until the Hour 2 meeting.
