@@ -8,7 +8,7 @@ Meetings reorder and drop items. This is a menu, not a queue.
 - `ts-starter` in combat
 - `sleep-20` / `sleep-35` / `sleep-45` on current control — Hour 2 slot 3 is `sleep-35`
 - numpy / load `world.json` in hello / `/tmp` / threads / memory toward 512 MB
-- one compiled runtime if Python is tight
+- one compiled runtime if Python is tight — Hour 2 slot 4 is **Rust aim-nv replica** (multiplex language + control + map load). Kite deferred. ts-starter only if Rust cannot build.
 
 ## Movement and survival
 

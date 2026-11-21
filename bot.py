@@ -462,7 +462,7 @@ class SilentWalkBot:
     def __init__(self, hello: mf.Hello) -> None:
         self.reach = hello["config"]["loot"]["pickup_radius"]
         mech = (hello.get("config") or {}).get("mech") or {}
-        walk = float(mech.get("walk_speed") or mech.get("walk") or 11.7)
+        walk = float(mech.get("walk_speed") or 11.7)
         self.scale = min(1.0, 4.9 / max(walk, 1.0))
 
     def act(self, obs: mf.Observation) -> mf.Action:

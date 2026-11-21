@@ -46,3 +46,25 @@
 - Score: **2.42** (vs py-starter 1.15). Entered in the final as current best. Board rank ~132.
 - Verdict: **promote as control.** Fighting nearest visible mech more than doubles starter placement. Kit loot/jump/boost-out-of-zone is not the combat core.
 - Intel: Combat section; Algorithms control = aim-nv chase+snap gun.
+
+## Local (wait window before Hour 2)
+
+- Language: kit `example.ts` via bun PASSes check (ready 179 ms, p50 0.2 ms). Python probes ready ~45 ms host / ~300–400 ms in 1-CPU Docker. **Stay on Python 3.13** for submits.
+- All play PROBE modes PASS host check.py (0 late except sleep probes by design). `sleep-20` p50 20.5 ms; `sleep-35` 35.6 ms; `sleep-45` 45.6 ms.
+- 1-CPU 512 MB Docker (match flags): idle PASS p50 0.9 ms; sleep-35 PASS 0 late p50 36.7 ms; sleep-45 PASS but **2/300 late**, max 91.9 ms.
+- Recorded check stream (300 obs): visible mech **56%** of ticks, range p50 140 m / p90 150 m. Horizontal lead at gun 252 m/s: p50 4.4 m, p90 7.6 m. Stream events: 13 damaged, 10 hit. Sounds include gun (62), laser, explosion, crate, death, boost.
+- `hello.config.mech` key is `walk_speed` (11.7), not `walk`. `world.json` 300 KB / 3.4 ms load.
+- Rust `mechbot` (serde_json, rust:1.85-bookworm → debian slim) 1-CPU Docker: aim-nv/idle/lead-gun PASS. ready ~200–230 ms. tick p50 **0.9 ms** (same floor as Python idle in Docker). Hello `world.json` **map_loaded=true load_ms≈5–6 prisms=259**. Compile after deps ~2.5 s locally; first scorer build pays the rust image pull (fits 10 min).
+
+## Hour 2
+
+Quota opens 2:04 AM EST. Control: aim-nv 2.42.
+
+### S5 idle
+
+- Hypothesis: a motionless mech is hunted quickly (weakest-first), so idle scores near the floor and gives TTK/hunt intel.
+- Probe: `idle` / _(SHA at submit)_
+- Allowed: _(pending)_
+- Score: _(pending)_
+- Verdict: _(pending)_
+- Intel: House bots

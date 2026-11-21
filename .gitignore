@@ -3,3 +3,5 @@ mechfight-kit/
 __pycache__/
 .venv/
 uv.lock
+target/
+rust/target/

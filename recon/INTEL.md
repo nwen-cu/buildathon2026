@@ -8,8 +8,10 @@ Living brief for the combat bot. Scorer facts land after Hour 1 slot 1.
 - OS: Debian GNU/Linux 13 (trixie) container on **GCP Ubuntu 24.04** kernel `7.0.0-1017-gcp`, x86_64, hostname `0aa17f502e6a`.
 - uid/gid **65534**. cgroup `cpu.max` = `100000 100000` (1 CPU). cgroup `memory.max` = 536870912 (512 MB).
 - `os.cpu_count()` reports **32** and `/proc/meminfo` shows the **host** (~126 GB). Do not size thread pools from nproc/meminfo; obey cgroup.
-- Import json/math ~0.004 ms. Timing headroom for AI still unknown (Hour 2 `sleep-35`).
+- Import json/math ~0.004 ms. Local 1-CPU Docker: idle p50 **0.9 ms** (host 0.1 ms). `sleep-35` p50 **36.7 ms**, 0 late. `sleep-45` p50 46.6 ms, **2/300 late** (still <2% so check PASS) max 91.9 ms. Combat work should stay **under ~35 ms**; 45 ms is the local cliff.
+- `world.json` (~300 KB) loads in **3.4 ms** locally; fine in hello, not every tick.
 - Hard no's: none yet. Stdlib-only Python is allowed. Do not size thread pools from host nproc/meminfo.
+- Language: **Python 3.13 is the control** (scored 2.42) and stays the vehicle for isolated A/Bs (idle, lead, kite). **Rust is the algorithm candidate**, not a tick-speed win on greedy: 1-CPU Docker p50 is **0.9 ms for both** Python idle and Rust aim-nv (JSON/protocol dominates). Rust hello loads `world.json` in **5–6 ms** (259 prisms) and still PASSes check (ready ~200 ms). Use Rust when we add A*/potential fields; do not switch language to shave greedy microseconds. Kit TypeScript/bun PASSes locally (ready 179 ms, p50 0.2 ms host) but is JIT/GC; skip `ts-starter` unless Rust cannot build on the scorer. Hour 2 slot 4 multiplexes Rust aim-nv: legal image + score vs 2.42 + map load.
 
 ## Scorer facts
 
@@ -67,8 +69,8 @@ Unmeasured in isolation. Starter loots and scores worse than a no-loot chaser, s
 ## Open questions
 
 - House-bot TTK on idle (Hour 2)
-- Lead vs snap on the chase controller
-- 50 ms cliff (`sleep-35` / `sleep-45`)
+- Lead vs snap on the chase controller (recorded vis range p50 **140 m**, gun-speed lead p50 **4.4 m** vs radius 2.5 m — isolated A/B is justified)
+- Remote 50 ms cliff (`sleep-35` scored; local `sleep-45` already nicks late%)
 - Kite vs commit
 - Boost noise / silent-walk / roofs
 - `/arena/complete` vs `v2` (deferred; combat unknowns rank higher)

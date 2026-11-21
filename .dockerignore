@@ -1,0 +1,7 @@
+mechfight-kit.tar.gz
+mechfight-kit/
+__pycache__/
+.venv/
+.git/
+.cursor/
+recon/
