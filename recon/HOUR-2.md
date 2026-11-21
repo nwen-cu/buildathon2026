@@ -1,12 +1,12 @@
 # Hour 2 — steered after Hour 1 review
 
-Quota: next four free at 2:04 AM EST (rolling hour from S1 1:04 AM).
+Quota: four free at 2:04 AM EST (rolling hour from S1 1:04 AM).
 
-Draft (confirm in the Hour 1 meeting after S3/S4 scores):
+Control: `aim-nearest-visible` (2.42). Do not dump.
 
-1. `idle` — house-bot time-to-kill / weakest-first.
-2. `aim-nearest-visible` if S4 not already run this hour; else `lead-gun` on the same chase as starter.
-3. `sleep-35` on the promoted play controller — 50 ms cliff.
-4. `boost-center` vs starter (starter already boosts out of zone) — isolate silent-walk if boost looks noisy.
+1. `idle` — house-bot time-to-kill / weakest-first on a sitting target.
+2. `lead-gun` — same chase as control, aim at gun-speed lead instead of snap.
+3. `sleep-35` — 35 ms sleep then aim-nv; 50 ms cliff / check late%.
+4. `kite` — strafe away while firing vs control's commit-chase.
 
-Do not dump again unless `/arena/complete` listing is the highest-value unknown.
+If idle dies at floor (score ~0), Hour 3 prefers survival/break-LOS over loot. If lead-gun beats 2.42, every later combat probe leads.

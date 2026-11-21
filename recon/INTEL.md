@@ -8,8 +8,8 @@ Living brief for the combat bot. Scorer facts land after Hour 1 slot 1.
 - OS: Debian GNU/Linux 13 (trixie) container on **GCP Ubuntu 24.04** kernel `7.0.0-1017-gcp`, x86_64, hostname `0aa17f502e6a`.
 - uid/gid **65534**. cgroup `cpu.max` = `100000 100000` (1 CPU). cgroup `memory.max` = 536870912 (512 MB).
 - `os.cpu_count()` reports **32** and `/proc/meminfo` shows the **host** (~126 GB). Do not size thread pools from nproc/meminfo; obey cgroup.
-- Import json/math ~0.004 ms. Timing headroom for AI still unknown (sleep probes).
-- Hard no's: none yet. Stdlib-only Python is allowed.
+- Import json/math ~0.004 ms. Timing headroom for AI still unknown (Hour 2 `sleep-35`).
+- Hard no's: none yet. Stdlib-only Python is allowed. Do not size thread pools from host nproc/meminfo.
 
 ## Scorer facts
 
@@ -44,27 +44,32 @@ Zone start (41.3, -72.8) r 560; phases r 380/240/140/70/25/0 dps 20/35/60/100/16
 
 ## House bots
 
-Unknown. Practice: 15 house bots, shared vision, no friendly fire, weakest-first.
+Published: 15 house bots, shared vision, no friendly fire, weakest-first. Idle TTK is Hour 2 slot 1. Aim-nv 2.42 vs starter 1.15 implies they can be damaged by a chasing gunner; they are not invulnerable spectators.
 
 ## Movement
 
-Unmeasured in matches. Protocol: slide on walls, step_up 1.2 m, jet for roofs, ~60 m climb on 100 energy.
+Aim-nv walks full speed toward the target (or zone) with **no boost** and still scored 2.42, so walking the Oval is enough to get guns on house bots. Boost/jet/roofs unmeasured. Protocol: slide on walls, step_up 1.2 m, jet for roofs, ~60 m climb on 100 energy.
 
 ## Combat
 
-Unmeasured. First play probe: `aim-nearest-visible`.
+- **Promoted:** snap-aim nearest visible `kind==mech`, walk toward it, fire gun only (`fire[True, False]`). Score **2.42**.
+- Kit starter (loot + jump + boost-out-of-zone + fire both) is **1.15**. Do not inherit loot/jump as the combat core.
+- Lead-gun vs snap is Hour 2. Special weapons unmeasured.
 
 ## Economy
 
-Unmeasured. Floor weapons 40, crates 36, NPCs 12, 3 supply drops.
+Unmeasured in isolation. Starter loots and scores worse than a no-loot chaser, so floor weapons are **not** required for a 2.x practice score. Crates/cubes/NPCs/drops still unknown as contests.
 
 ## Algorithms
 
-None promoted. Control after S2/S3: kit `py-starter` until a play probe beats it.
+**Control = greedy chase nearest visible mech + snap gun.** Legal under budget (no map, no A*). Greedy beat the kit utility-ish starter. Potential/A*/utility not yet tested.
 
 ## Open questions
 
-- What is `/arena/complete` vs `v2`?
-- Remote `py-starter` score vs baseline 1.15
-- `aim-nearest-visible` vs starter
-- 50 ms cliff, house-bot hunt, roofs, loot, nproc-vs-cgroup thread safety
+- House-bot TTK on idle (Hour 2)
+- Lead vs snap on the chase controller
+- 50 ms cliff (`sleep-35` / `sleep-45`)
+- Kite vs commit
+- Boost noise / silent-walk / roofs
+- `/arena/complete` vs `v2` (deferred; combat unknowns rank higher)
+- nproc-vs-cgroup thread safety (deferred; no threads in control)

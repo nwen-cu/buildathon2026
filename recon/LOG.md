@@ -38,6 +38,11 @@
 - Verdict: promote as control. Result UI is a single mean, no per-match places.
 - Intel: scorer matches the published starter score; our packaging is correct.
 
-### S4 aim-nearest-visible
+### S4 aim-nearest-visible — BB-2E0308D5
 
-_(pending)_
+- Hypothesis: snap-aim and chase the nearest visible mech, gun only, no loot/boost — beats idle walking-to-zone.
+- Probe: `aim-nearest-visible` / `20a11d71ebb4419c319913e9d922ae23581b656e`
+- Allowed: built, check passed, scored. Wait 125 ms.
+- Score: **2.42** (vs py-starter 1.15). Entered in the final as current best. Board rank ~132.
+- Verdict: **promote as control.** Fighting nearest visible mech more than doubles starter placement. Kit loot/jump/boost-out-of-zone is not the combat core.
+- Intel: Combat section; Algorithms control = aim-nv chase+snap gun.
