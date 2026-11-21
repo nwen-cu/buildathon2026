@@ -109,19 +109,28 @@ Quota opens 3:05 AM EST. Control: lead-gun 2.54.
 
 - Hypothesis: on damaged, 4 m A* behind a prism beats keep-committing (idle 0.02); else same lead-gun as 2.54.
 - Probe: `hide-prism` / `f80e9fd79d8db455ee433238f877184893c64536`
-- Allowed: received BB-F541F895 Sat 3:05 AM; **Scoring**. Wait 76 ms. Next quota 3:07 AM. Do not submit until scored.
-- Score: _(pending)_
-- Verdict: _(pending)_
-- Intel: Survival / Algorithms
+- Allowed: built, check passed, scored. BB-F541F895 Sat 3:05 AM. Wait 76 ms.
+- Score: **1.04** (vs lead 2.54, snap 2.42, starter 1.15)
+- Verdict: **kill hide-prism.** Stopping fire to A*-cover/boost on damaged is worse than keep-committing. Do not spend Hour 4 on ring size or silent cover until kite/boost land. Survival via LOS-break is not the gap vs 2.54.
+- Intel: Combat — keep shooting; idle 0.02 was motionless, not "not hiding."
 
 ### S10 kite
 
 - Hypothesis: strafe-away + snap gun beats commit-chase (lead 2.54); boost only inside 40 m.
-- Probe: `kite` / _(SHA at submit)_
-- Allowed: _(armed; submit after hide-prism scores and 3:07 AM slot)_
+- Probe: `kite` / `cb7c0142c5309a8af44ec82390343977bf18d05f`
+- Allowed: received BB-E868C826 Sat 3:08 AM; **Scoring**. Wait 147 ms. Next quota 3:10 AM. Do not submit until scored.
 - Score: _(pending)_
 - Verdict: _(pending)_
 - Intel: Combat — kite vs commit
+
+### S11 boost-center
+
+- Hypothesis: always-boost to zone (sound 90) while still shooting when visible changes placement vs lead-walk 2.54.
+- Probe: `boost-center` / _(SHA at submit)_
+- Allowed: _(armed; submit after kite scores and 3:10 AM slot)_
+- Score: _(pending)_
+- Verdict: _(pending)_
+- Intel: Movement / hunt noise
 
 ## Local — Rust path-zone / hide-prism
 
