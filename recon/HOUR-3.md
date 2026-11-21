@@ -1,6 +1,6 @@
 # Hour 3 — steered after Hour 2 review
 
-Quota: four free at 3:05 AM EST (rolling hour; UI: next slot 3:05 AM).
+Quota: rolling 4/hour (not a block of four). First slot 3:05 AM; next frees 3:07 AM; then ~3:10 and ~3:26. Never submit while Scoring.
 
 Control: `lead-gun` (2.54). Rust snap = Python snap = 2.42. Do not dump. Do not idle.
 
@@ -12,3 +12,5 @@ Control: `lead-gun` (2.54). Rust snap = Python snap = 2.42. Do not dump. Do not 
 If hide-prism local check regresses before submit, swap slot 1 to `break-los`. If Rust `path-zone` cannot be armed in time, swap slot 4 to Python `path-zone` rather than skip.
 
 Later combat probes still lead, not snap. Do not spend a slot on rust-lead until hide/kite/boost land.
+
+Note: `hide-prism` boosts while covering (faster to cover, but sound range 90). If it loses to lead 2.54, Hour 4 isolates silent cover vs the boost confound.

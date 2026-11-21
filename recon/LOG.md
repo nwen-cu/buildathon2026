@@ -59,6 +59,7 @@
 - Hour-2 wait: `kite` host PASS p50 0.1; **1-CPU Docker PASS** ready 298 ms, tick p50 **0.9** max **1.5**. `silent-walk` and `boost-center` host PASS p50 0.1.
 - `hide-prism` (lead chase; on damaged, 4 m A* to a cell with a prism between self and attacker). Host PASS ready 243 ms p50 0.1 max 1.1. **1-CPU Docker PASS** ready 512 ms, tick p50 **1.0** max **1.9**, 1 queued drop (still 0 late). Hour-3 survival candidate ahead of naive `break-los`.
 - Rust `h2-rs-aim-nv` 1-CPU Docker recheck before slot 4: PASS ready 173 ms, tick p50 **0.9** max **1.6**, `map_loaded=true load_ms=5.98 prisms=259`.
+- Hour-3 arm: Python `hide-prism` host recheck PASS ready 243 ms p50 0.1 max 1.3. `kite` host PASS ready 49 ms p50 0.1. `boost-center` host PASS ready 44 ms p50 0.1. SHA `f80e9fd` pushed to `recon`.
 
 ## Hour 2
 
@@ -107,11 +108,20 @@ Quota opens 3:05 AM EST. Control: lead-gun 2.54.
 ### S9 hide-prism
 
 - Hypothesis: on damaged, 4 m A* behind a prism beats keep-committing (idle 0.02); else same lead-gun as 2.54.
-- Probe: `hide-prism` / _(SHA at submit)_
-- Allowed: _(pending quota 3:05 AM EST)_
+- Probe: `hide-prism` / `f80e9fd79d8db455ee433238f877184893c64536`
+- Allowed: received BB-F541F895 Sat 3:05 AM; **Scoring**. Wait 76 ms. Next quota 3:07 AM. Do not submit until scored.
 - Score: _(pending)_
 - Verdict: _(pending)_
 - Intel: Survival / Algorithms
+
+### S10 kite
+
+- Hypothesis: strafe-away + snap gun beats commit-chase (lead 2.54); boost only inside 40 m.
+- Probe: `kite` / _(SHA at submit)_
+- Allowed: _(armed; submit after hide-prism scores and 3:07 AM slot)_
+- Score: _(pending)_
+- Verdict: _(pending)_
+- Intel: Combat — kite vs commit
 
 ## Local — Rust path-zone / hide-prism
 

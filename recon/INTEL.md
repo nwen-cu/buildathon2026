@@ -48,7 +48,7 @@ Zone start (41.3, -72.8) r 560; phases r 380/240/140/70/25/0 dps 20/35/60/100/16
 
 Published: 15 house bots, shared vision, no friendly fire, weakest-first.
 - **Idle scores 0.02** (BB-1B56E18D). They commit immediately on a sitting target; almost always first-dead across 48 matches.
-- Aim-nv **2.42** / lead-gun **2.54** vs idle **0.02**: moving + shooting is the difference between place ~13 and place 16. Never stand still.
+- Aim-nv **2.42** / lead-gun **2.54** vs idle **0.02**: moving + shooting is the difference between place ~13 and place 16. Never stand still. Board **145 / 180** at 2.54 (Sat 2:33 AM). Top practice ~5.60.
 - They can be damaged (lead-gun is not feeding 0.02). Hunt is real; they are not spectators.
 
 ## Movement
@@ -77,6 +77,8 @@ Local map (kit `v2/world.json`): bounds ~1067×722 m, **259 prisms** (223 buildi
 - **2 m grid** (194k cells, 189 KB): raster **422 ms**, A* **0.07–25 ms**. Fits locally; too little headroom next to JSON (~0.9 ms) and aim if we also sleep or do LOS. Rust is for 2 m / terrain / LOS, not for 4 m greedy pathing.
 
 Do not kill Python for a 4 m planner. Do not run 2 m A* on Python until a 1-CPU probe says late% is 0.
+
+Local cover_step on the Oval (400 random open cells, threat 80 m): ring 10 (40 m) hits **48%**; ring 15 hits 61%; ring 20 hits 73%. Misses fall back to flee+boost. Hour 3 `hide-prism` uses ring 10. If it ties lead, Hour 4 bumps ring before blaming the hide idea.
 
 ## Open questions
 
