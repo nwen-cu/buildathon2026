@@ -1,0 +1,5 @@
+mechfight-kit.tar.gz
+mechfight-kit/
+__pycache__/
+.venv/
+uv.lock
