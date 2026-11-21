@@ -22,8 +22,9 @@ Meetings reorder and drop items. This is a menu, not a queue.
 
 ## Combat
 
-- `aim-nearest-visible` baseline — **promoted control, 2.42**
-- lead-gun vs snap — Hour 2 slot 2
+- `aim-nearest-visible` snap — 2.42
+- lead-gun vs snap — **promoted control, 2.54**
+- lead-gun vs snap — Hour 2 slot 2 (done)
 - kite vs commit — Hour 2 slot 4
 - face-attacker
 - sound-turn

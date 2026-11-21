@@ -46,7 +46,10 @@ Zone start (41.3, -72.8) r 560; phases r 380/240/140/70/25/0 dps 20/35/60/100/16
 
 ## House bots
 
-Published: 15 house bots, shared vision, no friendly fire, weakest-first. Idle TTK is Hour 2 slot 1. Aim-nv 2.42 vs starter 1.15 implies they can be damaged by a chasing gunner; they are not invulnerable spectators.
+Published: 15 house bots, shared vision, no friendly fire, weakest-first.
+- **Idle scores 0.02** (BB-1B56E18D). They commit immediately on a sitting target; almost always first-dead across 48 matches.
+- Aim-nv **2.42** / lead-gun **2.54** vs idle **0.02**: moving + shooting is the difference between place ~13 and place 16. Never stand still.
+- They can be damaged (lead-gun is not feeding 0.02). Hunt is real; they are not spectators.
 
 ## Movement
 
@@ -54,9 +57,10 @@ Aim-nv walks full speed toward the target (or zone) with **no boost** and still 
 
 ## Combat
 
-- **Promoted:** snap-aim nearest visible `kind==mech`, walk toward it, fire gun only (`fire[True, False]`). Score **2.42**.
+- **Promoted:** chase nearest visible `kind==mech`, **gun-speed lead** (252 m/s), fire gun only (`fire[True, False]`). Score **2.54** (BB-BD3210F4).
+- Snap-aim same chase is **2.42**. Lead is worth +0.12; keep it.
 - Kit starter (loot + jump + boost-out-of-zone + fire both) is **1.15**. Do not inherit loot/jump as the combat core.
-- Lead-gun vs snap is Hour 2. Special weapons unmeasured.
+- Special weapons unmeasured.
 
 ## Economy
 
@@ -64,7 +68,7 @@ Unmeasured in isolation. Starter loots and scores worse than a no-loot chaser, s
 
 ## Algorithms
 
-**Control = greedy chase nearest visible mech + snap gun.** Legal under budget. Greedy beat the kit starter.
+**Control = greedy chase nearest visible mech + gun-speed lead.** Legal under budget. Lead 2.54 > snap 2.42 > starter 1.15.
 
 Local map (kit `v2/world.json`): bounds ~1067×722 m, **259 prisms** (223 building / 27 stadium / 9 bridge), **156 ground blockers** (base < 2.5 m and top > 1.2 m). Terrain heightfield 1070×724 @ 1 m.
 
@@ -76,8 +80,8 @@ Do not kill Python for a 4 m planner. Do not run 2 m A* on Python until a 1-CPU 
 
 ## Open questions
 
-- House-bot TTK on idle (Hour 2)
-- Lead vs snap on the chase controller (recorded vis range p50 **140 m**, gun-speed lead p50 **4.4 m** vs radius 2.5 m — isolated A/B is justified)
+- House-bot TTK on idle: **answered** — 0.02, hunt is immediate
+- Lead vs snap: **answered** — lead **2.54** beats snap **2.42** (BB-BD3210F4). Use lead.
 - Remote 50 ms cliff (`sleep-35` scored; local `sleep-45` already nicks late%)
 - Kite vs commit; `break-los` on damaged (local check PASS, Hour 3 candidate)
 - 2 m / terrain-aware pathing in Rust vs 4 m Python A* in a match (local only so far)

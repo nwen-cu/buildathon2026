@@ -2,12 +2,12 @@
 
 Do not execute this order if Hour 2 disagrees.
 
-Steering inputs expected from Hour 2: idle TTK, lead vs 2.42, sleep-35 late%/score, rust-aim-nv vs 2.42.
+Steering inputs: idle **0.02** (hunt is real). Lead-gun **2.54** beats snap 2.42 — later combat uses lead. Still waiting: sleep-35, rust-aim-nv.
 
 Candidates (pick exactly 4 at the meeting):
 
-1. `kite` — deferred from Hour 2; commit vs strafe if rust/lead did not already reshape combat.
-2. `break-los` — local check PASS. Use if idle dies fast (house bots hunt sitting targets).
+1. `break-los` — **promoted to first candidate** after idle 0.02. Local check PASS.
+2. `kite` — deferred from Hour 2; commit vs strafe if rust/lead did not already reshape combat.
 3. `walk-center` or `boost-center` — isolate boost noise if idle TTK is short (sound range boost 90 vs step 40).
 4. `take-laser` or `silent-walk` — only if pathing/hunt is not the blocker.
 5. If Rust ≈ 2.42: next compiled multiplex is **Rust 4 m A\* + aim-nv** (pathing + combat), not a third language.

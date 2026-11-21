@@ -65,16 +65,25 @@ Quota opens 2:04 AM EST. Control: aim-nv 2.42.
 
 - Hypothesis: a motionless mech is hunted quickly (weakest-first), so idle scores near the floor and gives TTK/hunt intel.
 - Probe: `idle` / `01526ab20ebc80ac464f3ed684adb8af0c568dcf`
-- Allowed: built (receipt **BB-1B56E18D**, Scoring/Fetching Sat 2:05 AM, wait 166 ms)
-- Score: _(pending)_
-- Verdict: _(pending)_
-- Intel: House bots
+- Allowed: built, check passed, scored. Wait 166 ms.
+- Score: **0.02**
+- Verdict: **kill idle forever.** House bots hunt a motionless mech to near-first-dead. Survival/break-LOS is now a top Hour-3 unknown. Do not confound with language.
+- Intel: House bots — TTK on idle is match-start; weakest-first is real.
 
 ### S6 lead-gun
 
 - Hypothesis: same chase as aim-nv 2.42, aim at gun-speed lead instead of snap; recorded vis range p50 140 m implies ~4.4 m lead.
-- Probe: `lead-gun` / _(SHA at submit)_
+- Probe: `lead-gun` / `aaf59897a1fee7b6659fe4519e73fc9570b9e216`
+- Allowed: built, check passed, scored. BB-BD3210F4 Sat 2:07 AM. Wait 116 ms.
+- Score: **2.54** (vs snap aim-nv 2.42). Entered in the final as current best. Board rank ~138.
+- Verdict: **promote lead.** +0.12 mean from gun-speed lead at vis p50 140 m. Later combat probes lead, not snap.
+- Intel: Combat — lead is the new control.
+
+### S7 sleep-35
+
+- Hypothesis: wrapping aim-nv in 35 ms sleep still scores near 2.42 remotely; isolates the 50 ms cliff without changing policy.
+- Probe: `sleep-35` / _(SHA at submit)_
 - Allowed: _(pending)_
 - Score: _(pending)_
 - Verdict: _(pending)_
-- Intel: Combat
+- Intel: Runtime budget
