@@ -176,6 +176,47 @@ class DumpBot:
         sys.exit(1)
 
 
+def _dump_runtime(hello: mf.Hello) -> None:
+    # Keep this under ~2 KiB so the scorer's stderr tail includes all of it.
+    report = {
+        "probe": "dump-runtime",
+        "ls": {
+            "/": _dir_listing("/"),
+            "/bot": _dir_listing("/bot"),
+            "/arena": _dir_listing("/arena"),
+            "/tmp": _dir_listing("/tmp"),
+        },
+        "hello_protocol": hello.get("protocol"),
+        "hello_slot": hello.get("slot"),
+        "hello_map": hello.get("map"),
+        "nproc": os.cpu_count(),
+        "meminfo": _meminfo_snippet(),
+        "cgroup": _cgroup_hints(),
+        "os_release": _os_release(),
+        "uid_gid": _uid_gid(),
+        "uname": platform.uname()._asdict(),
+        "python": sys.version,
+        "executable": sys.executable,
+        "platform": sys.platform,
+        "import_ms": _import_timing(),
+        "ruler": _stderr_ruler(32),
+    }
+    sys.stderr.write(json.dumps(report, separators=(",", ":"), default=str) + "\n")
+    sys.stderr.flush()
+
+
+class DumpRuntimeBot:
+    name = "h1s2-dump-runtime"
+
+    def __init__(self, hello: mf.Hello) -> None:
+        _dump_runtime(hello)
+
+    def act(self, obs: mf.Observation) -> mf.Action:
+        sys.stdout.write("INVALID PROTOCOL LINE\n")
+        sys.stdout.flush()
+        sys.exit(1)
+
+
 class PyStarterBot:
     name = "h1s2-py-starter"
 
@@ -250,6 +291,7 @@ class AimNearestVisibleBot:
 
 _MODES = {
     "dump-platform": DumpBot,
+    "dump-runtime": DumpRuntimeBot,
     "py-starter": PyStarterBot,
     "aim-nearest-visible": AimNearestVisibleBot,
 }

@@ -11,9 +11,11 @@ Living brief for the combat bot. Scorer facts land after Hour 1 slot 1.
 
 ## Scorer facts
 
+- S1 BB-C6CA6276 rejected; check.py ran in the match sandbox. stderr feedback is a **short tail** (upgrades JSON only). Put the payload you care about last and keep it small.
+- Scorer `hello.config.upgrades` matches the kit recording (mortar/laser/lightning upgrade ids and muls). Treat kit config as live until proven otherwise.
 - Local `check.py` hello.protocol `mechfight/1`, slot 3 in the recording.
 - Map files: `v2/world.json`, `v2/terrain.i16`.
-- stderr truncation: unknown until S1 reject message.
+- Runtime OS/cgroup/python: pending compact S2 dump-runtime.
 - Recorded `hello.config` (kit stream; treat as live unless S1 differs):
 
 Match: tick_hz 20, decide_every 2, duration_s 480, 16 mechs.
