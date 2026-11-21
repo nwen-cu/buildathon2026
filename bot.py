@@ -804,6 +804,44 @@ class OccupancyGrid:
         ty = self.miny + (tj + 0.5) * self.step
         return _toward((src[0], src[1]), (tx, ty))
 
+    def cover_step(self, src, threat_xy, ring: int = 10) -> list[float] | None:
+        si, sj = self._ij(src[0], src[1])
+        ti, tj = self._ij(threat_xy[0], threat_xy[1])
+        nx, ny, grid = self.nx, self.ny, self.grid
+        best = None
+        best_d = 10**9
+        for r in range(2, ring + 1):
+            for di in range(-r, r + 1):
+                for dj in range(-r, r + 1):
+                    if abs(di) != r and abs(dj) != r:
+                        continue
+                    ni, nj = si + di, sj + dj
+                    if ni < 0 or nj < 0 or ni >= nx or nj >= ny:
+                        continue
+                    if grid[nj * nx + ni]:
+                        continue
+                    n = max(abs(ti - ni), abs(tj - nj), 1)
+                    blocked = False
+                    for k in range(1, n):
+                        ii = ni + (ti - ni) * k // n
+                        jj = nj + (tj - nj) * k // n
+                        if 0 <= ii < nx and 0 <= jj < ny and grid[jj * nx + ii]:
+                            blocked = True
+                            break
+                    if not blocked:
+                        continue
+                    d = abs(di) + abs(dj)
+                    if d < best_d:
+                        best_d = d
+                        best = (ni, nj)
+            if best is not None:
+                break
+        if best is None:
+            return None
+        tx = self.minx + (best[0] + 0.5) * self.step
+        ty = self.miny + (best[1] + 0.5) * self.step
+        return self.step_toward(src, (tx, ty)) or _toward((src[0], src[1]), (tx, ty))
+
 
 class PathZoneBot:
     name = "h3-path-zone"
@@ -833,6 +871,46 @@ class PathZoneBot:
                 act.update(move=step, aim=[math.atan2(step[1], step[0]), 0.0])
                 return act
         _walk_zone(act, me, obs, boost=False)
+        return act
+
+
+class HidePrismBot:
+    name = "h3-hide-prism"
+
+    def __init__(self, hello: mf.Hello) -> None:
+        self.grid = None
+        path = _world_json_path(hello)
+        if path:
+            with open(path, encoding="utf-8") as f:
+                self.grid = OccupancyGrid(json.load(f), step=4.0)
+        self.last_bearing: float | None = None
+        self.hurt_until = -1.0
+
+    def act(self, obs: mf.Observation) -> mf.Action:
+        me = obs["self"]
+        act: mf.Action = {"tick": obs["tick"]}
+        t = float(obs.get("t") or 0.0)
+        x, y, z = me["pos"]
+        for ev in obs.get("events") or []:
+            if ev.get("type") == "damaged" and ev.get("bearing") is not None:
+                self.last_bearing = float(ev["bearing"])
+                self.hurt_until = t + 4.0
+        if t < self.hurt_until and self.last_bearing is not None:
+            br = self.last_bearing
+            threat = (x + 80.0 * math.cos(br), y + 80.0 * math.sin(br))
+            step = self.grid.cover_step(me["pos"], threat) if self.grid else None
+            if step is None:
+                away = br + math.pi
+                step = [math.cos(away), math.sin(away)]
+            act.update(move=step, aim=[br, 0.0], boost=True, fire=[False, False])
+            return act
+        target = _nearest_mech(obs, me)
+        if target is not None:
+            lead = _lead_pos(me, target)
+            yaw, pitch = _aim_at(me["pos"], lead)
+            act.update(move=[math.cos(yaw), math.sin(yaw)], aim=[yaw, pitch], fire=[True, False])
+        else:
+            _walk_zone(act, me, obs, boost=False)
         return act
 
 
@@ -913,6 +991,7 @@ _MODES = {
     "zone-hug": ZoneHugBot,
     "break-los": BreakLosBot,
     "path-zone": PathZoneBot,
+    "hide-prism": HidePrismBot,
     "sleep-20": _sleep_wrapper(_CONTROL, 20),
     "sleep-35": _sleep_wrapper(_CONTROL, 35),
     "sleep-45": _sleep_wrapper(_CONTROL, 45),

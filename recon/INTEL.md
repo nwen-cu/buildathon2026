@@ -11,7 +11,7 @@ Living brief for the combat bot. Scorer facts land after Hour 1 slot 1.
 - Import json/math ~0.004 ms. Local 1-CPU Docker: idle p50 **0.9 ms** (host 0.1 ms). `sleep-35` p50 **36.7 ms**, 0 late. `sleep-45` p50 46.6 ms, **2/300 late** (still <2% so check PASS) max 91.9 ms. Combat work should stay **under ~35 ms**; 45 ms is the local cliff.
 - `world.json` (~300 KB) loads in **3.4 ms** locally; fine in hello, not every tick.
 - Hard no's: none yet. Stdlib-only Python is allowed. Do not size thread pools from host nproc/meminfo.
-- Language: **Python 3.13 is the control** (scored 2.42) and stays the vehicle for isolated A/Bs (idle, lead, kite). **Rust is the algorithm candidate.** 1-CPU Docker greedy p50 is **0.9 ms for both** Python aim-nv and Rust aim-nv (JSON dominates). Rust **tail is tighter** (max 1.5 ms vs Python max 3.3 ms) and hello-loads `world.json` in **5–6 ms** (259 prisms). Use Rust for 2 m / terrain / LOS planners; 4 m A* is already legal in Python (max 2.8 ms). Kit TypeScript/bun PASSes locally but is JIT/GC; skip `ts-starter` unless Rust cannot build on the scorer. Hour 2 slot 4 multiplexes Rust aim-nv: legal image + score vs 2.42 + map load.
+- Language: **Python 3.13 is the A/B vehicle.** Rust snap aim-nv scored **2.42** (BB-EADD5BC0) — identical to Python snap. Greedy JSON ticks dominate; language is score-neutral on chase-gun. **Rust is legal** (built, mapped 259 prisms, wait 31 ms) and is the planner runtime for 2 m / terrain / LOS. 4 m A* is already legal in Python (max 2.8 ms) and now also in Rust (host/1-CPU hide-prism p50 0.9 ms). Skip `ts-starter`. Next compiled multiplex is Rust `path-zone` (4 m A* + snap), not a third language.
 
 ## Scorer facts
 
@@ -83,8 +83,8 @@ Do not kill Python for a 4 m planner. Do not run 2 m A* on Python until a 1-CPU 
 - House-bot TTK on idle: **answered** — 0.02, hunt is immediate
 - Lead vs snap: **answered** — lead **2.54** beats snap **2.42** (BB-BD3210F4). Use lead.
 - Remote 50 ms cliff: **answered** — `sleep-35` scores **2.42** (BB-8CE1E77C), same as snap aim-nv. 35 ms work is legal; scoring ran slow (~15 min) because lockstep waits. Keep combat under 35 ms. Do not probe sleep-45.
-- Kite vs commit; `break-los` on damaged (local check PASS, Hour 3 candidate)
-- 2 m / terrain-aware pathing in Rust vs 4 m Python A* in a match (local only so far)
+- Kite vs commit; hide-prism on damaged (local check PASS; Hour 3 slot 1)
+- Remote 4 m A* in a match: local PASS (Python hide-prism / path-zone; Rust hide-prism / path-zone). Hour 3 slot 4 is Rust `path-zone`.
 - Boost noise / silent-walk / roofs
 - `/arena/complete` vs `v2` (deferred; combat unknowns rank higher)
 - nproc-vs-cgroup thread safety (deferred; no threads in control)

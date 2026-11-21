@@ -94,8 +94,25 @@ Quota opens 2:04 AM EST. Control: aim-nv 2.42.
 ### S8 rust-aim-nv
 
 - Hypothesis: Rust replica of snap aim-nv builds under 10 min, scores ≈ Python 2.42, and hello-loads world.json (259 prisms).
-- Probe: `aim-nearest-visible` (Rust image) / _(SHA at submit)_
-- Allowed: _(pending)_
+- Probe: `aim-nearest-visible` (Rust image) / `256727269e5aed634f426a275072ffd198cf90bd`
+- Allowed: built, check passed, scored. BB-EADD5BC0 Sat 2:26 AM. Wait 31 ms.
+- Score: **2.42** (exactly Python snap aim-nv). Best unchanged at lead-gun 2.54.
+- Verdict: **promote Rust as legal planner runtime.** Score-neutral vs Python greedy snap. Do not switch A/B vehicle off Python. Next compiled multiplex is 4 m A* + chase (`path-zone`), not a third language.
+- Intel: Language — Rust snap = Python snap = 2.42. Greedy JSON ticks dominate; rust image built fast on the scorer.
+
+## Hour 3
+
+Quota opens 3:05 AM EST. Control: lead-gun 2.54.
+
+### S9 hide-prism
+
+- Hypothesis: on damaged, 4 m A* behind a prism beats keep-committing (idle 0.02); else same lead-gun as 2.54.
+- Probe: `hide-prism` / _(SHA at submit)_
+- Allowed: _(pending quota 3:05 AM EST)_
 - Score: _(pending)_
 - Verdict: _(pending)_
-- Intel: Language + algorithms substrate
+- Intel: Survival / Algorithms
+
+## Local — Rust path-zone / hide-prism
+
+- Grid build ~1.5 ms (7177 blocked @ step 4); check PASS both probes (p50 ~0.9 ms, max ≤1.7 ms); path-zone ready ~1208 ms (cold), hide-prism ~200 ms; 1-CPU/512 MiB hide-prism PASS (ready 197 ms).

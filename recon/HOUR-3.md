@@ -1,16 +1,14 @@
-# Hour 3 — draft (confirm after Hour 2 meeting)
+# Hour 3 — steered after Hour 2 review
 
-Do not execute this order if Hour 2 disagrees.
+Quota: four free at 3:05 AM EST (rolling hour; UI: next slot 3:05 AM).
 
-Steering inputs: idle **0.02**. Lead-gun **2.54** beats snap 2.42. sleep-35 **2.42** (35 ms legal). Still waiting: rust-aim-nv.
+Control: `lead-gun` (2.54). Rust snap = Python snap = 2.42. Do not dump. Do not idle.
 
-Candidates (pick exactly 4 at the meeting):
+1. `hide-prism` (Python) — on damaged, 4 m A* to a cell with a prism between self and attacker; else lead-gun. Survival vs commit after idle 0.02.
+2. `kite` (Python) — strafe-away vs commit. Deferred from Hour 2.
+3. `boost-center` (Python) — isolate boost noise/speed (sound 90 vs step 40) while still fighting when visible.
+4. `path-zone` (Rust) — compiled 4 m A* to zone when nobody is visible, else snap chase. Multiplex: remote planner + language now that Rust is legal.
 
-1. `break-los` or `hide-prism` — **promoted** after idle 0.02. `break-los` host PASS; `hide-prism` A* behind a prism (Hour-2 wait).
-2. `kite` — deferred from Hour 2; commit vs strafe if rust/lead did not already reshape combat.
-3. `walk-center` or `boost-center` — isolate boost noise if idle TTK is short (sound range boost 90 vs step 40).
-4. `take-laser` or `silent-walk` — only if pathing/hunt is not the blocker.
-5. If Rust ≈ 2.42: next compiled multiplex is **Rust 4 m A\* + aim-nv** (pathing + combat), not a third language.
-6. Python `path-zone` — 4 m A\* to zone when nobody is visible, else aim-nv. 1-CPU Docker PASS (ready 501 ms, tick p50 1.0 max 1.8). Kill if score ≤ walk-to-zone.
+If hide-prism local check regresses before submit, swap slot 1 to `break-los`. If Rust `path-zone` cannot be armed in time, swap slot 4 to Python `path-zone` rather than skip.
 
-Local already: 4 m A\* max 2.8 ms on 1 CPU — legal. 2 m A\* max 25 ms — Rust-only until proven. `break-los` and `path-zone` are implemented; do not submit them until the Hour 2 meeting.
+Later combat probes still lead, not snap. Do not spend a slot on rust-lead until hide/kite/boost land.

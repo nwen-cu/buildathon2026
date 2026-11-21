@@ -25,7 +25,7 @@ Meetings reorder and drop items. This is a menu, not a queue.
 - `aim-nearest-visible` snap — 2.42
 - lead-gun vs snap — **promoted control, 2.54**
 - lead-gun vs snap — Hour 2 slot 2 (done)
-- kite vs commit — Hour 2 slot 4
+- kite vs commit — Hour 3 slot 2
 - face-attacker
 - sound-turn
 - spray-blind through trees
