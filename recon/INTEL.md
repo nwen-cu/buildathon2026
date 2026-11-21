@@ -82,7 +82,7 @@ Do not kill Python for a 4 m planner. Do not run 2 m A* on Python until a 1-CPU 
 
 - House-bot TTK on idle: **answered** — 0.02, hunt is immediate
 - Lead vs snap: **answered** — lead **2.54** beats snap **2.42** (BB-BD3210F4). Use lead.
-- Remote 50 ms cliff (`sleep-35` scored; local `sleep-45` already nicks late%)
+- Remote 50 ms cliff: **answered** — `sleep-35` scores **2.42** (BB-8CE1E77C), same as snap aim-nv. 35 ms work is legal; scoring ran slow (~15 min) because lockstep waits. Keep combat under 35 ms. Do not probe sleep-45.
 - Kite vs commit; `break-los` on damaged (local check PASS, Hour 3 candidate)
 - 2 m / terrain-aware pathing in Rust vs 4 m Python A* in a match (local only so far)
 - Boost noise / silent-walk / roofs

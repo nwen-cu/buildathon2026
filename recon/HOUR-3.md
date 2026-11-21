@@ -2,11 +2,11 @@
 
 Do not execute this order if Hour 2 disagrees.
 
-Steering inputs: idle **0.02** (hunt is real). Lead-gun **2.54** beats snap 2.42 — later combat uses lead. Still waiting: sleep-35, rust-aim-nv.
+Steering inputs: idle **0.02**. Lead-gun **2.54** beats snap 2.42. sleep-35 **2.42** (35 ms legal). Still waiting: rust-aim-nv.
 
 Candidates (pick exactly 4 at the meeting):
 
-1. `break-los` — **promoted to first candidate** after idle 0.02. Local check PASS.
+1. `break-los` or `hide-prism` — **promoted** after idle 0.02. `break-los` host PASS; `hide-prism` A* behind a prism (Hour-2 wait).
 2. `kite` — deferred from Hour 2; commit vs strafe if rust/lead did not already reshape combat.
 3. `walk-center` or `boost-center` — isolate boost noise if idle TTK is short (sound range boost 90 vs step 40).
 4. `take-laser` or `silent-walk` — only if pathing/hunt is not the blocker.

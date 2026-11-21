@@ -56,6 +56,9 @@
 - `hello.config.mech` key is `walk_speed` (11.7), not `walk`. `world.json` 300 KB / 3.4 ms load.
 - Rust `mechbot` (serde_json, rust:1.85-bookworm → debian slim) 1-CPU Docker: aim-nv/idle/lead-gun PASS. ready ~200–230 ms. tick p50 **0.9 ms** (same floor as Python idle in Docker). Hello `world.json` **map_loaded=true load_ms≈5–6 prisms=259**. Compile after deps ~2.5 s locally; first scorer build pays the rust image pull (fits 10 min).
 - 1-CPU Docker grid/A* (Python, `/arena/v2/world.json`): 156 ground-blocking prisms. 4 m A* max **2.8 ms** (legal). 2 m A* max **25 ms** (tight). `break-los` host check PASS p50 0.1 ms. `path-zone` 1-CPU Docker PASS ready 501 ms, tick p50 1.0 max 1.8.
+- Hour-2 wait: `kite` host PASS p50 0.1; **1-CPU Docker PASS** ready 298 ms, tick p50 **0.9** max **1.5**. `silent-walk` and `boost-center` host PASS p50 0.1.
+- `hide-prism` (lead chase; on damaged, 4 m A* to a cell with a prism between self and attacker). Host PASS ready 243 ms p50 0.1 max 1.1. **1-CPU Docker PASS** ready 512 ms, tick p50 **1.0** max **1.9**, 1 queued drop (still 0 late). Hour-3 survival candidate ahead of naive `break-los`.
+- Rust `h2-rs-aim-nv` 1-CPU Docker recheck before slot 4: PASS ready 173 ms, tick p50 **0.9** max **1.6**, `map_loaded=true load_ms=5.98 prisms=259`.
 
 ## Hour 2
 
@@ -82,8 +85,17 @@ Quota opens 2:04 AM EST. Control: aim-nv 2.42.
 ### S7 sleep-35
 
 - Hypothesis: wrapping aim-nv in 35 ms sleep still scores near 2.42 remotely; isolates the 50 ms cliff without changing policy.
-- Probe: `sleep-35` / _(SHA at submit)_
+- Probe: `sleep-35` / `084f3405104d89470383150fd743a5137940c953`
+- Allowed: built, check passed, scored. BB-8CE1E77C Sat 2:10 AM. Wait 481 ms. Fetching/scoring took ~15 min (slow ticks).
+- Score: **2.42** (exactly aim-nv snap). Best unchanged at lead-gun 2.54.
+- Verdict: **promote 35 ms as a legal remote budget.** Policy still plays; mean matches snap 2.42. Do not spend another slot on sleep-45. Combat work under 35 ms is not leaving points on the table vs greedy.
+- Intel: Runtime — 35 ms is the remote-legal work window.
+
+### S8 rust-aim-nv
+
+- Hypothesis: Rust replica of snap aim-nv builds under 10 min, scores ≈ Python 2.42, and hello-loads world.json (259 prisms).
+- Probe: `aim-nearest-visible` (Rust image) / _(SHA at submit)_
 - Allowed: _(pending)_
 - Score: _(pending)_
 - Verdict: _(pending)_
-- Intel: Runtime budget
+- Intel: Language + algorithms substrate
